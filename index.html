@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Codifica e decodifica immagini</title>
+	<style type="text/css">
+	@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+
+		body{
+			margin: 4em 8em 5em 8em;
+			padding:0;
+			background-color: rgb(0, 0, 0);
+			overflow-y: hidden;
+		}
+		
+		/*canvas {
+			display:block;
+			margin-top: -7em;
+			border: 1px solid black;
+			
+		}*/
+
+
+		#canvas {
+			display:block;
+		}
+
+		#carica {
+			display:block;
+		}
+		
+		.griglia {
+			max-width: 100vw;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+			grid-column-gap: 1em;
+			grid-row-gap: 1em;
+			margin-bottom: 1em;
+		}
+
+		.cella {
+			/*background-color: lightblue;*/
+			/*outline: 1px red solid;*/
+			font-family: 'Source Code Pro', monospace;
+			color: white;
+		}
+
+		.doppia {
+			 grid-column: span 2;
+		}
+		.tripla {
+			 grid-column: span 3;
+		}
+		.quadrupla {
+			 grid-column: span 4;
+		}
+
+		.quintupla {
+			 grid-column: span 5;
+		}
+
+		.settupla {
+			grid-column: span 7;
+			
+		}
+
+		.bottone{
+			margin-top: 20px;
+			width: 72px;
+    		height: 22px;
+   			display: block;
+   			overflow: hidden;
+    		cursor: pointer;
+		
+		}
+
+		.tutta {
+			 grid-column: span 12;
+		}
+
+		.nascosto {
+			display: none;
+		}
+			
+		.comparsa:hover + .nascosto {
+			display: block;
+			color: rgb(255, 255, 255);
+		}
+		
+		button:hover{
+			background-color: rgb(48, 48, 48);
+			color: rgb(255, 255, 255);
+		}
+
+		button{
+			color: white;
+			font-family: 'Source Code Pro', monospace;
+			width: 48%;
+			height: 2.5em;
+			font-size: 16px;
+			padding: 0;
+			margin-top: 1em;
+			background-color: rgb(0, 0, 0);
+			border: 0.25px solid rgb(255, 255, 255)
+		}
+
+		textarea{
+			color: white;
+			font-family: 'Source Code Pro', monospace;
+			width: 100%;
+			height: 10em;
+			font-size: 16px;
+			padding: 0;
+			background-color: rgb(0, 0, 0);
+			border: 0.25px solid rgb(255, 255, 255)
+		}
+
+
+		
+
+	</style>
+</head>
+
+<body>
+		<div class="griglia">
+
+		<div class="cella tutta" style="display: flex; justify-content: space-between;">
+			<h1 style="margin-top: 0; margin-bottom: 0; font-size: 4em; line-height: 1; ">Broken data</h1>
+			<h1 style="font-size: 1em";> <a href="https://ixd-supsi.github.io/atlantetecnolgico/?" style="text-decoration: none; color: white;">Index</a></h1>
+		</div>
+
+		<div class="cella tutta" style="margin-top: -10px;">
+			<hr style="border: 0.25px solid white;">
+		</div>
+
+		<div class="cella settupla"></div>
+
+		<div class="cella quintupla"  style="font-weight: 500;">
+			<section style="margin-top: -1em">
+
+					<div class="comparsa" style="cursor: help; width: 100%;">
+						<h3 style="padding: 0; margin: 0; ">
+							<img src="immagini/arrow_forward_white_24dp.svg" style="margin-bottom: -6px;">
+							How to use this tool
+						</h3>	
+					</div>
+					
+
+					<div class="nascosto" style="width: 100; line-height: 1.25;">
+						<br>
+						Use this tool to share encrypted images. <br>
+						Import your original image into the box in order to encode it.
+						The key in generated randomly by the algorithm but you can also
+						manipulate it or play with its properties and discover interesting outputs.
+						Save your encoded image and share it (don't miss the password too). 
+						Import your encrypted image into the box, write the password 
+						and reveal the original photo.
+					</div>
+			  </section>
+			
+		</div>
+		
+			<div class="cella tutta">
+				<hr style="border: 0.25px solid white; margin-top: -0.5em; margin-bottom: 3vh;">
+			</div>
+			
+			<div id="file_upload_container" class="cella settupla bottone">
+				<!-- <input type='file' accept=".png, .jpg>" id = "carica" style="border: none;"> --> 
+				<!-- <div id= "carica" accept=".png, .jpg"></div>  -->
+			</div>
+
+			<div class="cella quintupla">
+				<h3 style="margin-top: 1em; margin-bottom: 0; ">
+					Key
+				</h3>
+			</div>
+
+			<div class="cella settupla">
+				<div id="canvas"></div> 
+			</div>
+				
+
+			<div class="cella quintupla">
+				<div>
+					<textarea type="text" id ="testo"></textarea>
+				</div>
+				
+
+				
+
+				<div style="display: flex; justify-content: space-between;">					
+					<button id="randomKey" type="button">Generate Key</button>
+					<button onclick="copiaChiave()" type="button">Copy the key</button>
+				</div>
+
+				<div style="display: flex; justify-content: space-between;">					
+					<button id="codifica" type="button">Encode</button>
+					<button id="decodifica" type="button">Decode</button>
+				</div>
+				
+				<div style="display: flex; justify-content: space-between;">
+					<button onclick="salvaImm()" >Save image</button>
+					
+				</div>
+			</div>
+		</div>
+
+
+
+	<!--
+		embed dello script: copiate l'ultima versione da qui:
+		https://cdnjs.com/libraries/p5.js
+	-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.min.js" integrity="sha512-b/htz6gIyFi3dwSoZ0Uv3cuv3Ony7EeKkacgrcVg8CMzu90n777qveu0PBcbZUA7TzyENGtU+qZRuFAkfqgyoQ==" crossorigin="anonymous"></script>
+	<!--
+		link al vostro file
+	-->
+	<script src="main.js"></script>
+
+
+</body>
+</html>
